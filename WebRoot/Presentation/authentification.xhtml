@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions" lang="en">
+<f:view contentType="text/html">
+	<h:head>
+		<!-- 			<f:loadBundle basename="#{changeLocalActionBeans.langue}" var="msg" />
+ -->
+		<title>JSF 2.2 Page</title>
+		<meta name="keywords" content="enter,your,keywords,here" />
+		<meta name="description" content="A short description of this page." />
+		<meta name="content-type" content="text/html; charset=UTF-8" />
+	</h:head>
+	<h:body>
+		<h:form id="forme">
+			<center>
+				<h:outputLabel value="#{msg.username}" />
+				<h:inputText id="login" value="#{authentificationActionBeans.employer.login}" title="login" />
+				<p:message for="login" />
+				<h:outputLabel value="#{msg.password}" />
+				<h:inputSecret id="password" value="#{authentificationActionBeans.employer.password}" title="password" />
+				<p:message for="password" />
+				<p:commandButton id="selectButton"
+					action="#{authentificationActionBeans.authentifier}"
+					title="authentifier" value="connecter" update="forme" />
+			</center>
+		</h:form>
+	</h:body>
+</f:view>
+</html>
