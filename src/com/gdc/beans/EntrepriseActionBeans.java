@@ -1,6 +1,8 @@
 package com.gdc.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -32,11 +34,13 @@ public class EntrepriseActionBeans implements Serializable{
 	 * 
 	 */
 	
+	private List<Entreprise> listEntreprise=new ArrayList<Entreprise>();
 	private Entreprise entreprise;
 	
 	
 	@PostConstruct
 	public void init(){
+		listEntreprise=entrepriseService.findAll();
 		
 	}
 
@@ -49,6 +53,23 @@ public class EntrepriseActionBeans implements Serializable{
 	public void setEntreprise(Entreprise entreprise) {
 		this.entreprise = entreprise;
 	}
+
+
+	public List<Entreprise> getListEntreprise() {
+		return listEntreprise;
+	}
+
+
+	public void setListEntreprise(List<Entreprise> listEntreprise) {
+		this.listEntreprise = listEntreprise;
+	}
+	
+	public void viderAjouterEntreprise(){
+		Entreprise e=new Entreprise();
+		listEntreprise.add(e);
+	}
+	
+	
 	
 	
 
