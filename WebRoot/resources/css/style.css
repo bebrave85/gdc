@@ -10,6 +10,22 @@
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Tags: html, themplate, Sufee-Admin
 --------------------------------------------------------- */
+
+/* mon CSS Que j ai ajouter debut ici */
+.rowsDatatTableStyle {
+	/*class pour les lignes des tables DATATABLES*/
+	background: url('../resources/images/RowsImage.png') repeat !important;
+	font-size: 12pt;
+	color: #ffffff;
+	/*white-space: pre-wrap; */
+	border-style: solid !important;
+}
+.ui-datatable .ui-state-highlight {
+	background: url('../Annimation/icons/RowImageChange.jpg') repeat
+		!important;
+}
+
+/* mon CSS Que j ai ajouter se fini ici */
 .bg-flat-color-1 {
   background: #20a8d8; }
 
@@ -106,6 +122,7 @@ aside.left-panel {
   vertical-align: top;
   width: 280px;
   transition: width 0.3s ease; }
+  
 
 .navbar {
   background: #272c33;

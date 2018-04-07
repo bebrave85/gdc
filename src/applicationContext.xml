@@ -33,6 +33,7 @@
 			<list>
 				<value>com.gdc.modele.Entreprise</value>
 				<value>com.gdc.modele.Employer</value>
+				<value>com.gdc.modele.Compte</value>
 			</list>
 		</property>
 	</bean>

@@ -62,7 +62,7 @@ public class AuthentificationActionBeans implements Serializable{
 				page="entreprise";
 			}else{
 				if(employerService.findByQuery(" where login='"+employer.getLogin()+"' and password='"+employer.getPassword()+"'").size()>0){
-					page="entreprise";
+					page="acceuil?faces-redirect=true";
 				}else{
 					page="";
 				}

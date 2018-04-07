@@ -9,13 +9,12 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions" lang="en"
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
-	<title>JSF 2.x Page</title>
 	<meta name="keywords" content="enter,your,keywords,here" />
 	<meta name="description" content="A short description of this page." />
 	<meta name="content-type" content="text/html; charset=UTF-8" />
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>Sufee Admin - HTML5 Admin Template</title>
+	<title>Comptes</title>
 	<meta name="description" content="Sufee Admin - HTML5 Admin Template" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -45,15 +44,26 @@
 					<h:form id="form">
 					<p:panelGrid columns="1">
 					<p:commandButton value="Ajouter une ligne" title="Ajouter un ligne vide"
-							action="#{entrepriseActionBeans.viderAjouterEntreprise}"
-							update="tableEntreprise" />
+							action="#{compteActionBeans.viderAjouterCompte}"
+							update="tableEntreprise"/>
+							
+							<p:commandButton title="Ajouter un ligne vide"
+							action="#{compteActionBeans.viderAjouterCompte}"
+							update="tableEntreprise"/>
+							
+							<p:commandButton onclick="PF('dialogUpload').show();">
+				                <p:graphicImage name="/resources/images/excel.png" width="24"/>				   
+				            </p:commandButton>
+							
 					</p:panelGrid>
 						<p:dataTable id="tableEntreprise" var="e"
-							value="#{entrepriseActionBeans.listEntreprise}" editable="true"
-							scrollable="true " scrollHeight="400" scrollWidth="false" rowStyleClass="rowsDatatTableStyle">
+							value="#{compteActionBeans.listCompte}" editable="true" paginator="true"
+							scrollable="true " scrollHeight="400" scrollWidth="false" rowStyleClass="rowsDatatTableStyle" rows="10"                         
+                         	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         	rowsPerPageTemplate="5,10,15">
 	
 	
-							<p:ajax event="rowEdit" listener="#{entrepriseActionBeans.ajouterEntreprise}"
+							<p:ajax event="rowEdit" listener="#{compteActionBeans.ajouterCompte}"
 								update=":form:tableEntreprise" />
 							<!-- <p:ajax event="rowEditCancel" listener="#{dtEditView.onRowCancel}"
 								update=":form" /> -->
@@ -66,63 +76,52 @@
 						           </p:cellEditor>
 						       </p:column> -->
 	
-							<p:column headerText="Nom">
+							<p:column headerText="N° Compte">
 								<p:cellEditor>
 									<f:facet name="output">
-										<h:outputText value="#{e.nom}" />
+										<h:outputText value="#{e.numCompte}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText value="#{e.nom}" required="true"/>
+										<p:inputText value="#{e.numCompte}" required="true"/>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
 	
-							<p:column headerText="Num IF">
+							<p:column headerText="Libelle">
 								<p:cellEditor>
 									<f:facet name="output">
-										<h:outputText value="#{e.numIf}" />
+										<h:outputText value="#{e.nomCompte}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText value="#{e.numIf}" required="true"/>
+										<p:inputText value="#{e.nomCompte}" required="true"/>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
 	
-							<p:column headerText="ICE">
+							<p:column headerText="Class Compte">
 								<p:cellEditor>
 									<f:facet name="output">
-										<h:outputText value="#{e.ice}" />
+										<h:outputText value="#{e.classCompte}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText value="#{e.ice}" required="true"/>
+										<p:inputText value="#{e.classCompte}" required="true"/>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
 	
-							<p:column headerText="RC">
+							<p:column headerText="Rubrique">
 								<p:cellEditor>
 									<f:facet name="output">
-										<h:outputText value="#{e.rc}" />
+										<h:outputText value="#{e.rubrique}" />
 									</f:facet>
 									<f:facet name="input">
-										<p:inputText value="#{e.rc}" required="true"/>
-									</f:facet>
-								</p:cellEditor>
-							</p:column>
-	
-							<p:column headerText="CNSS">
-								<p:cellEditor>
-									<f:facet name="output">
-										<h:outputText value="#{e.cnss}" />
-									</f:facet>
-									<f:facet name="input">
-										<p:inputText value="#{e.cnss}" required="true"/>
+										<p:inputText value="#{e.rubrique}" required="true"/>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
 							
 							<p:column style="width:70px">
-					           <p:commandButton icon="fa fa-fw fa-remove" action="#{entrepriseActionBeans.supprimerEntreprise(e.id)}" update=":form:tableEntreprise" >
+					           <p:commandButton icon="fa fa-fw fa-remove" action="#{compteActionBeans.supprimerCompte(e.id)}" update=":form:tableEntreprise" >
 					           		<p:confirm header="Confirmation" message="Tu es sure?" icon="ui-icon-alert" />
 					           </p:commandButton>
 					       </p:column>
@@ -137,6 +136,11 @@
 						        <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 						        <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 						    </p:confirmDialog>
+						    
+						    <p:dialog header="Import Comptes" showEffect="explode" hideEffect="bounce" widgetVar="dialogUpload" id="dialogUpload">
+						    	<p:fileUpload fileUploadListener="#{compteActionBeans.fileUpload}" mode="advanced" dragDropSupport="false"
+           							update=":form:tableEntreprise" sizeLimit="100000000" fileLimit="100" allowTypes="/(\.|\/)(xls|xlsx)$/" />
+						    </p:dialog>
 					</h:form>					
 				</div>				
 			</div>			
