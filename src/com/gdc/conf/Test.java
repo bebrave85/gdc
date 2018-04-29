@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -15,48 +17,114 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.messaging.SubscribableChannel;
 
 public class Test {
+	
+	private String x;
+	private String y;
+	private String z;
+	private String v;
+	
+	
+	public String getX() {
+		return x;
+	}
+
+
+	public void setX(String x) {
+		this.x = x;
+	}
+
+
+	public String getY() {
+		return y;
+	}
+
+
+	public void setY(String y) {
+		this.y = y;
+	}
+
+
+	public String getZ() {
+		return z;
+	}
+
+
+	public void setZ(String z) {
+		this.z = z;
+	}
+
+
+	public String getV() {
+		return v;
+	}
+
+
+	public void setV(String v) {
+		this.v = v;
+	}
+	
+	
+
+
+	public Test(String x, String y, String z, String v) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.v = v;
+	}
+	
+	public Test() {
+
+	}
+	
+	public Test subs(String x){
+		Test t=new Test();
+		try{
+			Integer i1=x.indexOf("|");
+			int integerx=Integer.parseInt(x.substring(0,i1));
+			t.x=integerx+"";
+			System.out.println(integerx);
+			//////////////////////////////
+			x=x.substring(i1+1, x.length());
+			Integer i2=x.indexOf("|");
+			String stringx2=x.substring(0,i2);
+			t.y=stringx2;
+			System.out.println(stringx2);
+			//////////////////////////////
+			x=x.substring(i2+1, x.length());
+			Integer i3=x.indexOf("|");
+			String stringx3=x.substring(0,i3);
+			t.z=stringx3;
+			System.out.println(stringx3);
+			///////////////////////////////////
+			x=x.substring(i3+1, x.length());
+			if(x.length()>0){
+				Integer i4=x.indexOf("|");
+				String stringx4=x.substring(0,i4);
+				t.v=stringx4;
+				System.out.println(stringx4);
+			}else{
+				System.out.println("hhhhhhhhhhhh");
+				t.v="";
+			}
+			
+			
+		}catch(Exception e){			
+		}
+		return t;
+		
+	}
+
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
+		Test test=new Test();
+		List<Test> ListObject=new ArrayList<Test>();
 		
 		 // Creating a Workbook from an Excel file (.xls or .xlsx)
         Workbook workbook = WorkbookFactory.create(new File("C:\\Users\\Be BrAvE\\Desktop\\plan-comptable-marocain-excel.xls"));
-
-        // Retrieving the number of sheets in the Workbook
-        System.out.println("Workbook has " + workbook.getNumberOfSheets() + " Sheets : ");
-
-        /*
-           =============================================================
-           Iterating over all the sheets in the workbook (Multiple ways)
-           =============================================================
-        */
-
-        // 1. You can obtain a sheetIterator and iterate over it
-        Iterator<Sheet> sheetIterator = workbook.sheetIterator();
-        System.out.println("Retrieving Sheets using Iterator");
-        while (sheetIterator.hasNext()) {
-            Sheet sheet = sheetIterator.next();
-            System.out.println("=> " + sheet.getSheetName());
-        }
-
-        // 2. Or you can use a for-each loop
-        System.out.println("Retrieving Sheets using for-each loop");
-        for(Sheet sheet: workbook) {
-            System.out.println("=> " + sheet.getSheetName());
-        }
-
-        // 3. Or you can use a Java 8 forEach with lambda
-        System.out.println("Retrieving Sheets using Java 8 forEach with lambda");
-        workbook.forEach(sheet -> {
-            System.out.println("=> " + sheet.getSheetName());
-        });
-
-        /*
-           ==================================================================
-           Iterating over all the rows and columns in a Sheet (Multiple ways)
-           ==================================================================
-        */
 
         // Getting the Sheet at index zero
         Sheet sheet = workbook.getSheetAt(0);
@@ -65,44 +133,30 @@ public class Test {
         DataFormatter dataFormatter = new DataFormatter();
 
         // 1. You can obtain a rowIterator and columnIterator and iterate over them
-        System.out.println("\n\nIterating over Rows and Columns using Iterator\n");
         Iterator<Row> rowIterator = sheet.rowIterator();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
-
-            // Now let's iterate over the columns of the current row
-            Iterator<Cell> cellIterator = row.cellIterator();
-
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                String cellValue = dataFormatter.formatCellValue(cell);
-                System.out.print(cellValue + "\t");
-            }
-            System.out.println();
+            if(row.getRowNum()!=0){
+            	String X="";
+            	Iterator<Cell> cellIterator = row.cellIterator();
+               while (cellIterator.hasNext()) {
+                	Cell cell = cellIterator.next();
+                    String cellValue = dataFormatter.formatCellValue(cell);
+                	X+=cellValue+"|";
+                    //System.out.print(cellValue + "\t");                    
+                }
+               Test tt=test.subs(X);
+               if(tt!=null && tt.getX()!=null && tt.getX()!=""){
+            	   ListObject.add(tt);
+               }               
+                //System.out.println();
+            }           
         }
-
-        // 2. Or you can use a for-each loop to iterate over the rows and columns
-        System.out.println("\n\nIterating over Rows and Columns using for-each loop\n");
-        for (Row row: sheet) {
-            for(Cell cell: row) {
-                String cellValue = dataFormatter.formatCellValue(cell);
-                System.out.print(cellValue + "\t");
-            }
-            System.out.println();
-        }
-
-        // 3. Or you can use Java 8 forEach loop with lambda
-        System.out.println("\n\nIterating over Rows and Columns using Java 8 forEach with lambda\n");
-        sheet.forEach(row -> {
-            row.forEach(cell -> {
-                String cellValue = dataFormatter.formatCellValue(cell);
-                System.out.print(cellValue + "\t");
-            });
-            System.out.println();
-        });
-
-        // Closing the workbook
         workbook.close();
+        
+        for(Test ttt : ListObject){
+        	System.out.println(ttt.getX()+"\t"+ttt.getY()+"\t"+ttt.getZ()+"\t"+ttt.getV());
+        }				
     }
 
 	
